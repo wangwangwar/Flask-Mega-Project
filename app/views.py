@@ -7,5 +7,4 @@ from flask import render_template
 def index():
     user = {'nickname': 'Shulin'}
     return render_template('index.html',
-                           title='Home',
                            user=user)
