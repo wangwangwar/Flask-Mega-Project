@@ -58,7 +58,7 @@ def after_login(resp):
     if resp.email is None or resp.email == "":
         flash('Invalid login. Please try again.')
         return redirect(url_for('login'))
-    user = User.query.filter_by(email = resp.email).first()
+    user = User.query.filter_by(email=resp.email).first()
     print(user)
 
     # if we can't find user by email in db, we create it
@@ -66,7 +66,7 @@ def after_login(resp):
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
-            user = User(nickname = nickname, email = resp.email, role = ROLE_USER)
+            user = User(nickname=nickname, email=resp.email, role=ROLE_USER)
             db.session.add(user)
             db.session.commit()
 
@@ -79,3 +79,9 @@ def after_login(resp):
     #print(oid.get_next_url())
     return redirect(request.args.get('next') or url_for('index'))
     #return redirect(oid.get_next_url() or url_for('index'))
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
