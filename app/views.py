@@ -18,14 +18,14 @@ def before_request():
 def index():
     user = g.user
     posts = [   # fake array of posts
-             {
-                 'author': {'nickname': 'Li'},
-                 'body': "彪悍的人生何须BB。"
-             },
-             {
-                 'author': {'nickname': 'Zhang'},
-                 'body': "大家好你是猪嗦。"
-             }]
+        {
+            'author': {'nickname': 'Li'},
+            'body': "彪悍的人生何须BB。"
+        },
+        {
+            'author': {'nickname': 'Zhang'},
+            'body': "大家好你是猪嗦。"
+        }]
     return render_template('index.html',
                            title='Home',
                            user=user,
@@ -78,10 +78,26 @@ def after_login(resp):
     login_user(user, remember=remember_me)
     #print(oid.get_next_url())
     return redirect(request.args.get('next') or url_for('index'))
-    #return redirect(oid.get_next_url() or url_for('index'))
+#return redirect(oid.get_next_url() or url_for('index'))
 
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+
+@app.route('/user/<nickname>')
+@login_required
+def user(nickname):
+    user = User.query.filter_by(nickname=nickname).first()
+    if user is None:
+        flash('User ' + nickname + ' not found.')
+        return redirect(url_for('index'))
+    posts = [
+        {'author': user, 'body': 'Test post #1'},
+        {'author': user, 'body': 'Test post #2'},
+    ]
+    return render_template('user.html',
+                           user=user,
+                           posts=posts)
