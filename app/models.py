@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from app import db
+from hashlib import md5
 
 ROLE_USER = 0
 ROLE_ADMIN = 1
@@ -10,7 +11,7 @@ class User(db.Model):
     nickname = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     role = db.Column(db.SmallInteger, default=ROLE_USER)
-    posts = db.relationship('Post', backref = 'author', lazy='dynamic')
+    posts = db.relationship('Post', backref='author', lazy='dynamic')
 
     def is_authenticated(self):
         return True
@@ -24,6 +25,13 @@ class User(db.Model):
     def get_id(self):
         # return id in unicode format
         return str(self.id)
+
+    def avatar(self, size):
+        # in python3, self.email is unicode, we must encode it
+        # to convert to byte type first.
+        return ('http://www.gravatar.com/avatar/' +
+                md5(self.email.encode(encoding='utf-8')).hexdigest() +
+                '?d=mm&s=' + str(size))
 
     def __repr__(self):
         return '<User %r>' % (self.nickname)
