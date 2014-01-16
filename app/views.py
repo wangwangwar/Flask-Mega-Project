@@ -4,7 +4,7 @@ from flask.ext.login import login_user, logout_user, current_user, \
     login_required
 from datetime import datetime
 from app import app, db, lm, oid
-from app.forms import LoginForm
+from app.forms import LoginForm, EditForm
 from app.models import User, ROLE_ADMIN, ROLE_USER
 
 
@@ -64,7 +64,6 @@ def after_login(resp):
         flash('Invalid login. Please try again.')
         return redirect(url_for('login'))
     user = User.query.filter_by(email=resp.email).first()
-    print(user)
 
     # if we can't find user by email in db, we create it
     if user is None:
@@ -106,3 +105,19 @@ def user(nickname):
     return render_template('user.html',
                            user=user,
                            posts=posts)
+
+
+@app.route('/edit', methods=['GET', 'POST'])
+def edit():
+    form = EditForm()
+    if form.validate_on_submit():
+        g.user.nickname = form.nickname.data
+        g.user.about_me = form.about_me.data
+        db.session.add(g.user)
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('edit'))
+    else:
+        form.nickname.data = g.user.nickname
+        form.about_me.data = g.user.about_me
+        return render_template('edit.html', form=form)
