@@ -70,9 +70,9 @@ def after_login(resp):
         nickname = resp.nickname
         if nickname is None or nickname == "":
             nickname = resp.email.split('@')[0]
-            user = User(nickname=nickname, email=resp.email, role=ROLE_USER)
-            db.session.add(user)
-            db.session.commit()
+        user = User(nickname=nickname, email=resp.email, role=ROLE_USER)
+        db.session.add(user)
+        db.session.commit()
 
     remember_me = False
     if 'remember_me' in session:
