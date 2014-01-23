@@ -4,8 +4,8 @@ from flask.ext.login import login_user, logout_user, current_user, \
     login_required
 from datetime import datetime
 from app import app, db, lm, oid
-from app.forms import LoginForm, EditForm
-from app.models import User, ROLE_ADMIN, ROLE_USER
+from app.forms import LoginForm, EditForm, PostForm
+from app.models import User, ROLE_ADMIN, ROLE_USER, Post
 
 
 @app.before_request
@@ -17,23 +17,23 @@ def before_request():
         db.session.commit()
 
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    user = g.user
-    posts = [   # fake array of posts
-        {
-            'author': {'nickname': 'Li'},
-            'body': "彪悍的人生何须BB。"
-        },
-        {
-            'author': {'nickname': 'Zhang'},
-            'body': "大家好你是猪嗦。"
-        }]
+    form = PostForm()
+    if form.validate_on_submit():
+        post = Post(body=form.post.data,
+                    timestamp=datetime.utcnow(),
+                    author=g.user)
+        db.session.add(post)
+        db.session.commit()
+        flash('Your post is now live!')
+        return redirect(url_for('index'))
+    posts = g.user.followed_posts().all()
     return render_template('index.html',
                            title='Home',
-                           user=user,
+                           form=form,
                            posts=posts)
 
 
