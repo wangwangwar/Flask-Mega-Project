@@ -1,5 +1,10 @@
 <html>
     <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="/static/css/app.css" rel="stylesheet" media="screen">
+        <script src="/static/js/modernizr.js"></script>
+
         {% if title %}
         <title>{{title}} - microblog</title>
         {% else %}
@@ -7,28 +12,57 @@
         {% endif %}
     </head>
     <body>
-        <div>Microblog: 
-            <a href="/index">Home</a>
-            {% if g.user.is_authenticated() %}
-            | <a href="{{ url_for('user', nickname=g.user.nickname) }}">Your Profile</a>
-            | <form style="display: inline;" action="{{url_for('search')}}" method="post" name="search">
-                {{ g.search_form.hidden_tag() }}
-                {{ g.search_form.search(size=20) }}
-                <input type="submit" value="Search">
-            </form>
-            | <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
-        </div>
-        <hr>
+        <nav class="top-bar" data-topbar>
+            <ul class="title-area">
+                <li class="name">
+                    <h1><a href="/index">Home</a></h1>
+                </li>
+                <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+            </ul>
+
+            <section class="top-bar-section">
+                <!-- Right Nav Section -->
+                <ul class="right">
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+
+                <!-- Left Nav Section -->
+                <ul class="left">
+                    <li><a href="{{ url_for('user', nickname=g.user.nickname) }}">Your Profile</a></li>
+                    <li class="has-form">
+                        {% if g.user.is_authenticated() %}
+                        <form class="inline" action="{{url_for('search')}}" method="post" name="search">
+                            <div class="row collapse">
+                                {{ g.search_form.hidden_tag() }}
+                                <div class="medium-8 small-9 columns">
+                                    {{ g.search_form.search(size=20) }}
+                                </div>
+                                <div class="medium-4 small-3 columns">
+                                    <input type="submit" class="alert button expand" value="Search">
+                                </div>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </li>
+                </ul>
+            </section>
+        </nav>
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul>
+        <div data-alert class="alert-box">
             {% for message in messages %}
-            <li>{{ message }} </li>
+            {{ message }}
             {% endfor %}
-        </ul>
+            <a href="#" class="close">&times;</a>
+        </div>
         {% endif %}
         {% endwith %}
+
         {% block content %}{% endblock %}
+
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+        <script src="/static/js/foundation.min.js"></script>
+        <script src="/static/js/app.js"></script>
     </body>
 </html>

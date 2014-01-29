@@ -1,35 +1,57 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Hi, {{g.user.nickname}}!</h1>
-<form action="" method="post" name="post">
-    {{ form.hidden_tag() }}
-    <table>
-        <tr>
-            <td>Say something:</td>
-            <td>{{ form.post(size=30, maxlength=140) }}</td>
-            <td>
-                {% for error in form.errors.post %}
-                <span style="color: red">[{{ error }}]</span>
-                {% endfor %}
-            </td>
-        </tr>
-        <tr>
-            <td></td>
-            <td><input type="submit" value="Post!"></td>
-            <td></td>
-        </tr>
-    </table>
-</form>
+<div class="row">
+    <div class="small-12 columns">
+        <header>
+            <h1>Hi, {{g.user.nickname}}!</h1>
+        </header>
+
+        <section>
+            <form action="" method="post" name="post" data-abide>
+                {{ form.hidden_tag() }}
+                <div class="row">
+                    <div class="medium-12 columns">
+                        <label for="post"><h2>有什么想吐嘈的?</h2></label>
+                        {{ form.post(maxlength=140, required=true) }}
+                        <small class="error">必须要说点什么.</small>
+                        {% for error in form.errors.post %}
+                        <small class="error">{{ error }}</small>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="small-2 small-centered columns">
+                        <input type="submit" value="Post!" class="button expand">
+                    </div>
+                </div>
+            </form>
+        </section>
 
 
-{% for post in posts.items %}
-    {% include 'post.html' %}
-{% endfor %}
+        <article>
+            {% for post in posts.items %}
+            {% include 'post.html' %}
+            {% endfor %}
 
-{% if posts.has_prev %}
-<a href="{{ url_for('index', page=posts.prev_num) }}">
-    << Newer posts</a>{% else %}<< Newer posts{% endif %} |
-{% if posts.has_next %}
-<a href="{{ url_for('index', page=posts.next_num ) }}">
-    Older posts >></a>{% else %}Older posts >>{% endif %}
+            {% if posts.has_prev %}
+            <a href="{{ url_for('index', page=posts.prev_num) }}" class="button tiny">
+                Newer posts
+            </a>
+            {% else %}
+            <a href="#" class="button tiny disabled">
+                Newer posts
+            </a>
+            {% endif %}
+            {% if posts.has_next %}
+            <a href="{{ url_for('index', page=posts.next_num ) }}" class="button tiny">
+                Older posts >></a>
+            {% else %}
+            <a href="#" class="button tiny disabled">
+                Older posts
+            </a>
+            {% endif %}
+        </article>
+
+    </div>
+</div>
 {% endblock %}
