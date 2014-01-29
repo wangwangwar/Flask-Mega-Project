@@ -1,16 +1,16 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, BooleanField, TextAreaField
-from wtforms.validators import Required, Length
+from wtforms import StringField, BooleanField, TextAreaField
+from wtforms.validators import InputRequired, Length
 from app.models import User
 
 
 class LoginForm(Form):
-    openid = TextField('openid', validators=[Required()])
+    openid = StringField('openid', validators=[InputRequired()])
     remember_me = BooleanField('remember_me', default=False)
 
 
 class EditForm(Form):
-    nickname = TextField('nickname', validators=[Required()])
+    nickname = StringField('nickname', validators=[InputRequired()])
     about_me = TextAreaField('about_me', validators=[Length(min=0, max=140)])
 
     def __init__(self, original_nickname, *args, **kwargs):
@@ -31,8 +31,8 @@ class EditForm(Form):
 
 
 class PostForm(Form):
-    post = TextField('post', validators=[Required()])
+    post = StringField('post', validators=[InputRequired()])
 
 
 class SearchForm(Form):
-    search = TextField('search', validators=[Required()])
+    search = StringField('search', validators=[InputRequired()])
