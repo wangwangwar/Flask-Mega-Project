@@ -9,10 +9,13 @@ from config import (basedir,
                     MAIL_PORT,
                     MAIL_USERNAME,
                     MAIL_PASSWORD)
+from app.momentjs import momentjs
 import os
 
 app = Flask(__name__)
 app.config.from_object('config')
+
+# DB
 db = SQLAlchemy(app)
 
 # login with OpenID
@@ -25,8 +28,12 @@ oid = OpenID(app, os.path.join(basedir, 'tmp'))
 # mail
 mail = Mail(app)
 
+# moment.js
+app.jinja_env.globals['momentjs'] = momentjs
+
 # import views to work
 from app import views
+
 
 # when error we send out a email
 if not app.debug:
