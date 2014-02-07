@@ -13,7 +13,7 @@
                     <div class="medium-12 columns">
                         <label for="post"><h2>有什么想吐嘈的?</h2></label>
                         {{ form.post(maxlength=140, required=true) }}
-                        <small class="error">必须要说点什么.</small>
+                        <small class="error">难道没什么说的吗?</small>
                         {% for error in form.errors.post %}
                         <small class="error">{{ error }}</small>
                         {% endfor %}
