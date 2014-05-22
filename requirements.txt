@@ -2,11 +2,11 @@ Flask==0.10.1
 Flask-Login==0.2.9
 Flask-Mail==0.9.0
 Flask-Migrate==1.1.1
-Flask-OpenID==1.1
+-e git+https://github.com/DennisGlindhart/flask-openid.git#egg=Flask-OpenID
 Flask-SQLAlchemy==1.0
 Flask-Script==0.6.6
 Flask-WTF==0.9.4
-Flask-WhooshAlchemy==0.54a
+-e git+https://github.com/wangwangwar/Flask-WhooshAlchemy.git#egg=Flask-WhooseAlchemy
 Jinja2==2.7.2
 Mako==0.9.1
 MarkupSafe==0.18
